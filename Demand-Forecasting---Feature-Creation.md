@@ -206,9 +206,6 @@ kable(str(shipped_data))
 </tbody>
 </table>
 
-```r
-rm(shipped_raw)
-```
 
 #### Next, I need to aggregate all my data by the group of variables that I want to build a forecast.
 
@@ -236,23 +233,1580 @@ ggplot(shipped_agg, aes(x = Date, y=CY_Shipped )) +
     breaks=levels(shipped_agg$Date)[my_breaks])
 ```
 
-![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-13-1.png)<!-- -->
+![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-14-1.png)<!-- -->
 
 #### It's hard to tell but it looks like we are missing data at the end of our Date range. Let's check it out.
 
 ```r
-shipped_agg%>%
+kable(shipped_agg%>%
   group_by(Date)%>%
   summarize(count=n(),
-            total = sum(CY_Shipped))%>%
-  rmarkdown::paged_table()
+            total = sum(CY_Shipped)))%>%
+  kable_styling() %>%
+  scroll_box(width = "500px", height = "200px")
 ```
 
-<div data-pagedtable="false">
-  <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["Date"],"name":[1],"type":["fctr"],"align":["left"]},{"label":["count"],"name":[2],"type":["int"],"align":["right"]},{"label":["total"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"2015-01","2":"1104","3":"176314"},{"1":"2015-02","2":"1025","3":"475680"},{"1":"2015-03","2":"1025","3":"718916"},{"1":"2015-04","2":"1034","3":"768818"},{"1":"2015-05","2":"1002","3":"1265184"},{"1":"2015-06","2":"1010","3":"590407"},{"1":"2015-07","2":"1040","3":"589550"},{"1":"2015-08","2":"1012","3":"858661"},{"1":"2015-09","2":"1024","3":"1334855"},{"1":"2015-10","2":"1022","3":"1842944"},{"1":"2015-11","2":"1034","3":"2208468"},{"1":"2015-12","2":"1043","3":"3725464"},{"1":"2015-13","2":"1059","3":"3351484"},{"1":"2015-14","2":"1074","3":"3972595"},{"1":"2015-15","2":"1080","3":"3560389"},{"1":"2015-16","2":"1100","3":"3600819"},{"1":"2015-17","2":"1117","3":"3460655"},{"1":"2015-18","2":"1117","3":"3585257"},{"1":"2015-19","2":"1120","3":"2972426"},{"1":"2015-20","2":"1129","3":"3073670"},{"1":"2015-21","2":"1125","3":"2738860"},{"1":"2015-22","2":"1112","3":"2226360"},{"1":"2015-23","2":"1118","3":"1497526"},{"1":"2015-24","2":"1112","3":"1441926"},{"1":"2015-25","2":"1128","3":"1176588"},{"1":"2015-26","2":"1106","3":"1153929"},{"1":"2015-27","2":"1114","3":"776074"},{"1":"2015-28","2":"1120","3":"813471"},{"1":"2015-29","2":"1128","3":"868441"},{"1":"2015-30","2":"1126","3":"799869"},{"1":"2015-31","2":"1110","3":"1054440"},{"1":"2015-32","2":"1111","3":"594522"},{"1":"2015-33","2":"1102","3":"961393"},{"1":"2015-34","2":"1114","3":"1006242"},{"1":"2015-35","2":"1095","3":"900457"},{"1":"2015-36","2":"1096","3":"1056685"},{"1":"2015-37","2":"1094","3":"673180"},{"1":"2015-38","2":"1102","3":"1019734"},{"1":"2015-39","2":"1106","3":"1085217"},{"1":"2015-40","2":"1106","3":"943417"},{"1":"2015-41","2":"1103","3":"688043"},{"1":"2015-42","2":"1107","3":"508911"},{"1":"2015-43","2":"1123","3":"845380"},{"1":"2015-44","2":"1111","3":"1109528"},{"1":"2015-45","2":"1115","3":"1237812"},{"1":"2015-46","2":"1106","3":"756133"},{"1":"2015-47","2":"1113","3":"1096805"},{"1":"2015-48","2":"1099","3":"820066"},{"1":"2015-49","2":"1096","3":"553715"},{"1":"2015-50","2":"1092","3":"787819"},{"1":"2015-51","2":"1096","3":"734825"},{"1":"2015-52","2":"1093","3":"196751"},{"1":"2015-53","2":"1090","3":"922020"},{"1":"2016-01","2":"1087","3":"37166"},{"1":"2016-02","2":"1087","3":"651738"},{"1":"2016-03","2":"1078","3":"800541"},{"1":"2016-04","2":"1053","3":"547300"},{"1":"2016-05","2":"1041","3":"1266935"},{"1":"2016-06","2":"1039","3":"654449"},{"1":"2016-07","2":"1022","3":"943461"},{"1":"2016-08","2":"1042","3":"936292"},{"1":"2016-09","2":"1049","3":"1712264"},{"1":"2016-10","2":"1063","3":"1735562"},{"1":"2016-11","2":"1066","3":"3207721"},{"1":"2016-12","2":"1092","3":"3794607"},{"1":"2016-13","2":"1091","3":"4047196"},{"1":"2016-14","2":"1105","3":"3482648"},{"1":"2016-15","2":"1122","3":"3944928"},{"1":"2016-16","2":"1141","3":"3671362"},{"1":"2016-17","2":"1154","3":"3831141"},{"1":"2016-18","2":"1154","3":"3929474"},{"1":"2016-19","2":"1159","3":"3175573"},{"1":"2016-20","2":"1168","3":"3318393"},{"1":"2016-21","2":"1168","3":"2721664"},{"1":"2016-22","2":"1168","3":"2454912"},{"1":"2016-23","2":"1166","3":"1492611"},{"1":"2016-24","2":"1172","3":"1595307"},{"1":"2016-25","2":"1171","3":"1340768"},{"1":"2016-26","2":"1166","3":"1237812"},{"1":"2016-27","2":"1160","3":"1241507"},{"1":"2016-28","2":"1160","3":"676702"},{"1":"2016-29","2":"1162","3":"997467"},{"1":"2016-30","2":"1153","3":"813261"},{"1":"2016-31","2":"1155","3":"1560370"},{"1":"2016-32","2":"1149","3":"933326"},{"1":"2016-33","2":"1140","3":"782842"},{"1":"2016-34","2":"1140","3":"1013357"},{"1":"2016-35","2":"1144","3":"827290"},{"1":"2016-36","2":"1149","3":"1191819"},{"1":"2016-37","2":"1146","3":"908669"},{"1":"2016-38","2":"1148","3":"1151976"},{"1":"2016-39","2":"1145","3":"1014722"},{"1":"2016-40","2":"1162","3":"841974"},{"1":"2016-41","2":"1142","3":"547914"},{"1":"2016-42","2":"1154","3":"891777"},{"1":"2016-43","2":"1157","3":"806714"},{"1":"2016-44","2":"1158","3":"1171225"},{"1":"2016-45","2":"1151","3":"1077085"},{"1":"2016-46","2":"1155","3":"745533"},{"1":"2016-47","2":"1149","3":"812291"},{"1":"2016-48","2":"1144","3":"954714"},{"1":"2016-49","2":"1140","3":"647225"},{"1":"2016-50","2":"1136","3":"492482"},{"1":"2016-51","2":"1131","3":"857453"},{"1":"2016-52","2":"1121","3":"651736"},{"1":"2016-53","2":"1116","3":"1055611"},{"1":"2017-01","2":"1104","3":"507358"},{"1":"2017-02","2":"1090","3":"720732"},{"1":"2017-03","2":"1077","3":"1036649"},{"1":"2017-04","2":"1085","3":"1386120"},{"1":"2017-05","2":"1083","3":"1279695"},{"1":"2017-06","2":"1094","3":"1518976"},{"1":"2017-07","2":"1084","3":"1504738"},{"1":"2017-08","2":"1104","3":"2248669"},{"1":"2017-09","2":"1103","3":"2727403"},{"1":"2017-10","2":"1096","3":"3387558"},{"1":"2017-11","2":"1116","3":"2110491"},{"1":"2017-12","2":"1116","3":"2870845"},{"1":"2017-13","2":"1102","3":"3972457"},{"1":"2017-14","2":"1117","3":"3938165"},{"1":"2017-15","2":"1145","3":"4077093"},{"1":"2017-16","2":"1147","3":"3777769"},{"1":"2017-17","2":"1164","3":"4243976"},{"1":"2017-18","2":"1147","3":"3438270"},{"1":"2017-19","2":"1164","3":"2436509"},{"1":"2017-20","2":"1150","3":"2473438"},{"1":"2017-21","2":"1144","3":"3048414"},{"1":"2017-22","2":"1139","3":"1494081"},{"1":"2017-23","2":"1128","3":"1642386"},{"1":"2017-24","2":"1138","3":"1475733"},{"1":"2017-25","2":"1127","3":"1772163"},{"1":"2017-26","2":"1127","3":"1256671"},{"1":"2017-27","2":"1118","3":"927627"},{"1":"2017-28","2":"1123","3":"1020671"},{"1":"2017-29","2":"1099","3":"974178"},{"1":"2017-30","2":"1109","3":"1454635"},{"1":"2017-31","2":"1107","3":"843826"},{"1":"2017-32","2":"1101","3":"706822"},{"1":"2017-33","2":"1114","3":"898326"},{"1":"2017-34","2":"1106","3":"797766"},{"1":"2017-35","2":"1107","3":"1414836"},{"1":"2017-36","2":"1101","3":"785003"},{"1":"2017-37","2":"1106","3":"587984"},{"1":"2017-38","2":"1092","3":"1112209"},{"1":"2017-39","2":"1101","3":"1269767"},{"1":"2017-40","2":"1094","3":"602126"},{"1":"2017-41","2":"1109","3":"705206"},{"1":"2017-42","2":"1099","3":"1006947"},{"1":"2017-43","2":"1098","3":"891128"},{"1":"2017-44","2":"1085","3":"869906"},{"1":"2017-45","2":"1081","3":"705248"},{"1":"2017-46","2":"1095","3":"1094282"},{"1":"2017-47","2":"1089","3":"1001326"},{"1":"2017-48","2":"1093","3":"887124"},{"1":"2017-49","2":"1084","3":"872929"},{"1":"2017-50","2":"1077","3":"953712"},{"1":"2017-51","2":"1056","3":"463291"},{"1":"2017-52","2":"1053","3":"901877"},{"1":"2017-53","2":"1038","3":"0"},{"1":"2018-01","2":"1060","3":"325576"},{"1":"2018-02","2":"1065","3":"677086"},{"1":"2018-03","2":"1054","3":"594192"},{"1":"2018-04","2":"1058","3":"966243"},{"1":"2018-05","2":"1048","3":"1153339"},{"1":"2018-06","2":"1059","3":"1227725"},{"1":"2018-07","2":"1068","3":"1538160"},{"1":"2018-08","2":"1074","3":"2376844"},{"1":"2018-09","2":"1082","3":"2746304"},{"1":"2018-10","2":"1077","3":"3073629"},{"1":"2018-11","2":"1090","3":"2633524"},{"1":"2018-12","2":"1088","3":"3246326"},{"1":"2018-13","2":"1081","3":"2972258"},{"1":"2018-14","2":"1084","3":"3434567"},{"1":"2018-15","2":"1091","3":"3879499"},{"1":"2018-16","2":"1082","3":"3324898"},{"1":"2018-17","2":"1106","3":"3812500"},{"1":"2018-18","2":"1098","3":"3615039"},{"1":"2018-19","2":"1113","3":"3608791"},{"1":"2018-20","2":"1126","3":"3433668"},{"1":"2018-21","2":"1118","3":"2769745"},{"1":"2018-22","2":"1105","3":"2148625"},{"1":"2018-23","2":"1102","3":"1584570"},{"1":"2018-24","2":"1111","3":"1679610"},{"1":"2018-25","2":"1106","3":"1265381"},{"1":"2018-26","2":"1101","3":"1137080"},{"1":"2018-27","2":"1101","3":"901467"},{"1":"2018-28","2":"1111","3":"925816"},{"1":"2018-29","2":"1099","3":"1023262"},{"1":"2018-30","2":"1095","3":"1440600"},{"1":"2018-31","2":"1088","3":"1209750"},{"1":"2018-32","2":"1089","3":"1021708"},{"1":"2018-33","2":"1105","3":"766932"},{"1":"2018-34","2":"1087","3":"1035260"},{"1":"2018-35","2":"1085","3":"1446093"},{"1":"2018-36","2":"1078","3":"1162404"},{"1":"2018-37","2":"1078","3":"1282269"},{"1":"2018-38","2":"1079","3":"1345707"},{"1":"2018-39","2":"1082","3":"1284394"},{"1":"2018-40","2":"1080","3":"920550"},{"1":"2018-41","2":"1076","3":"857666"},{"1":"2018-42","2":"1076","3":"922532"},{"1":"2018-43","2":"1074","3":"1017598"},{"1":"2018-44","2":"1069","3":"1056534"},{"1":"2018-45","2":"1069","3":"915206"},{"1":"2018-46","2":"1063","3":"1117478"},{"1":"2018-47","2":"1058","3":"1032044"},{"1":"2018-48","2":"1060","3":"879955"},{"1":"2018-49","2":"1052","3":"813069"},{"1":"2018-50","2":"1050","3":"715880"},{"1":"2018-51","2":"1047","3":"493746"},{"1":"2018-52","2":"1057","3":"764003"},{"1":"2018-53","2":"1044","3":"57252"},{"1":"2019-01","2":"1048","3":"747982"},{"1":"2019-02","2":"1048","3":"794494"},{"1":"2019-03","2":"1050","3":"975622"},{"1":"2019-04","2":"1052","3":"1129077"},{"1":"2019-05","2":"1053","3":"1220011"},{"1":"2019-06","2":"1045","3":"1253905"},{"1":"2019-07","2":"1044","3":"1541032"},{"1":"2019-08","2":"1049","3":"1803261"},{"1":"2019-09","2":"1051","3":"2636057"},{"1":"2019-10","2":"1044","3":"2370363"},{"1":"2019-11","2":"1047","3":"2961700"},{"1":"2019-12","2":"1049","3":"3730900"},{"1":"2019-13","2":"1051","3":"3904287"},{"1":"2019-14","2":"1057","3":"4309552"},{"1":"2019-15","2":"1053","3":"4676142"},{"1":"2019-16","2":"1071","3":"4897571"},{"1":"2019-17","2":"1086","3":"5194951"},{"1":"2019-18","2":"1097","3":"4291125"},{"1":"2019-19","2":"1100","3":"4127173"},{"1":"2019-20","2":"1127","3":"4065942"},{"1":"2019-21","2":"1125","3":"3623816"},{"1":"2019-22","2":"1127","3":"1523581"},{"1":"2019-23","2":"1122","3":"1822741"},{"1":"2019-24","2":"1241","3":"1480971"},{"1":"2019-25","2":"1245","3":"1700950"},{"1":"2019-26","2":"1235","3":"1492285"},{"1":"2019-27","2":"1235","3":"1098727"},{"1":"2019-28","2":"1233","3":"941500"},{"1":"2019-29","2":"1230","3":"893052"},{"1":"2019-30","2":"1232","3":"1025655"},{"1":"2019-31","2":"1239","3":"1186058"},{"1":"2019-32","2":"1228","3":"1189090"},{"1":"2019-33","2":"1230","3":"1106885"},{"1":"2019-34","2":"1230","3":"1274547"},{"1":"2019-35","2":"1229","3":"1322772"},{"1":"2019-36","2":"1229","3":"671083"},{"1":"2019-37","2":"1225","3":"1216611"},{"1":"2019-38","2":"1228","3":"1091560"},{"1":"2019-39","2":"1226","3":"1208336"},{"1":"2019-40","2":"1228","3":"935742"},{"1":"2019-41","2":"1224","3":"802683"},{"1":"2019-42","2":"1230","3":"1011143"},{"1":"2019-43","2":"1234","3":"1060517"},{"1":"2019-44","2":"554","3":"273411"},{"1":"2019-45","2":"497","3":"167728"},{"1":"2019-46","2":"476","3":"136748"},{"1":"2019-47","2":"410","3":"0"},{"1":"2019-48","2":"442","3":"0"},{"1":"2019-49","2":"427","3":"0"},{"1":"2019-50","2":"368","3":"0"},{"1":"2019-51","2":"435","3":"0"},{"1":"2019-52","2":"457","3":"0"},{"1":"2019-53","2":"282","3":"34"},{"1":"2020-01","2":"355","3":"0"},{"1":"2020-02","2":"525","3":"0"},{"1":"2020-03","2":"537","3":"0"},{"1":"2020-04","2":"528","3":"0"},{"1":"2020-05","2":"563","3":"0"},{"1":"2020-06","2":"587","3":"0"},{"1":"2020-07","2":"620","3":"0"},{"1":"2020-08","2":"607","3":"0"},{"1":"2020-09","2":"594","3":"0"},{"1":"2020-10","2":"664","3":"0"},{"1":"2020-11","2":"679","3":"0"},{"1":"2020-12","2":"698","3":"0"},{"1":"2020-13","2":"724","3":"0"},{"1":"2020-14","2":"707","3":"0"},{"1":"2020-15","2":"709","3":"0"},{"1":"2020-16","2":"731","3":"0"},{"1":"2020-17","2":"710","3":"0"},{"1":"2020-18","2":"735","3":"0"},{"1":"2020-19","2":"714","3":"0"},{"1":"2020-20","2":"686","3":"0"},{"1":"2020-21","2":"700","3":"0"},{"1":"2020-22","2":"555","3":"0"},{"1":"2020-23","2":"612","3":"0"},{"1":"2020-24","2":"632","3":"0"},{"1":"2020-25","2":"647","3":"0"},{"1":"2020-26","2":"622","3":"0"},{"1":"2020-27","2":"580","3":"0"},{"1":"2020-28","2":"547","3":"0"},{"1":"2020-29","2":"559","3":"0"},{"1":"2020-30","2":"531","3":"0"},{"1":"2020-31","2":"577","3":"0"},{"1":"2020-32","2":"583","3":"0"},{"1":"2020-33","2":"561","3":"0"},{"1":"2020-34","2":"618","3":"0"},{"1":"2020-35","2":"620","3":"0"},{"1":"2020-36","2":"442","3":"0"},{"1":"2020-37","2":"525","3":"0"},{"1":"2020-38","2":"528","3":"0"},{"1":"2020-39","2":"517","3":"0"},{"1":"2020-40","2":"504","3":"0"},{"1":"2020-41","2":"462","3":"0"},{"1":"2020-42","2":"483","3":"0"},{"1":"2020-43","2":"487","3":"0"},{"1":"2020-44","2":"377","3":"0"},{"1":"2020-45","2":"42","3":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:200px; overflow-x: scroll; width:500px; "><table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Date </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> count </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> total </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;"> 2015-01 </td>
+   <td style="text-align:right;"> 1104 </td>
+   <td style="text-align:right;"> 176314 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-02 </td>
+   <td style="text-align:right;"> 1025 </td>
+   <td style="text-align:right;"> 475680 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-03 </td>
+   <td style="text-align:right;"> 1025 </td>
+   <td style="text-align:right;"> 718916 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-04 </td>
+   <td style="text-align:right;"> 1034 </td>
+   <td style="text-align:right;"> 768818 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-05 </td>
+   <td style="text-align:right;"> 1002 </td>
+   <td style="text-align:right;"> 1265184 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-06 </td>
+   <td style="text-align:right;"> 1010 </td>
+   <td style="text-align:right;"> 590407 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-07 </td>
+   <td style="text-align:right;"> 1040 </td>
+   <td style="text-align:right;"> 589550 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-08 </td>
+   <td style="text-align:right;"> 1012 </td>
+   <td style="text-align:right;"> 858661 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-09 </td>
+   <td style="text-align:right;"> 1024 </td>
+   <td style="text-align:right;"> 1334855 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-10 </td>
+   <td style="text-align:right;"> 1022 </td>
+   <td style="text-align:right;"> 1842944 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-11 </td>
+   <td style="text-align:right;"> 1034 </td>
+   <td style="text-align:right;"> 2208468 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-12 </td>
+   <td style="text-align:right;"> 1043 </td>
+   <td style="text-align:right;"> 3725464 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-13 </td>
+   <td style="text-align:right;"> 1059 </td>
+   <td style="text-align:right;"> 3351484 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-14 </td>
+   <td style="text-align:right;"> 1074 </td>
+   <td style="text-align:right;"> 3972595 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-15 </td>
+   <td style="text-align:right;"> 1080 </td>
+   <td style="text-align:right;"> 3560389 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-16 </td>
+   <td style="text-align:right;"> 1100 </td>
+   <td style="text-align:right;"> 3600819 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-17 </td>
+   <td style="text-align:right;"> 1117 </td>
+   <td style="text-align:right;"> 3460655 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-18 </td>
+   <td style="text-align:right;"> 1117 </td>
+   <td style="text-align:right;"> 3585257 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-19 </td>
+   <td style="text-align:right;"> 1120 </td>
+   <td style="text-align:right;"> 2972426 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-20 </td>
+   <td style="text-align:right;"> 1129 </td>
+   <td style="text-align:right;"> 3073670 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-21 </td>
+   <td style="text-align:right;"> 1125 </td>
+   <td style="text-align:right;"> 2738860 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-22 </td>
+   <td style="text-align:right;"> 1112 </td>
+   <td style="text-align:right;"> 2226360 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-23 </td>
+   <td style="text-align:right;"> 1118 </td>
+   <td style="text-align:right;"> 1497526 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-24 </td>
+   <td style="text-align:right;"> 1112 </td>
+   <td style="text-align:right;"> 1441926 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-25 </td>
+   <td style="text-align:right;"> 1128 </td>
+   <td style="text-align:right;"> 1176588 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-26 </td>
+   <td style="text-align:right;"> 1106 </td>
+   <td style="text-align:right;"> 1153929 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-27 </td>
+   <td style="text-align:right;"> 1114 </td>
+   <td style="text-align:right;"> 776074 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-28 </td>
+   <td style="text-align:right;"> 1120 </td>
+   <td style="text-align:right;"> 813471 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-29 </td>
+   <td style="text-align:right;"> 1128 </td>
+   <td style="text-align:right;"> 868441 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-30 </td>
+   <td style="text-align:right;"> 1126 </td>
+   <td style="text-align:right;"> 799869 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-31 </td>
+   <td style="text-align:right;"> 1110 </td>
+   <td style="text-align:right;"> 1054440 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-32 </td>
+   <td style="text-align:right;"> 1111 </td>
+   <td style="text-align:right;"> 594522 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-33 </td>
+   <td style="text-align:right;"> 1102 </td>
+   <td style="text-align:right;"> 961393 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-34 </td>
+   <td style="text-align:right;"> 1114 </td>
+   <td style="text-align:right;"> 1006242 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-35 </td>
+   <td style="text-align:right;"> 1095 </td>
+   <td style="text-align:right;"> 900457 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-36 </td>
+   <td style="text-align:right;"> 1096 </td>
+   <td style="text-align:right;"> 1056685 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-37 </td>
+   <td style="text-align:right;"> 1094 </td>
+   <td style="text-align:right;"> 673180 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-38 </td>
+   <td style="text-align:right;"> 1102 </td>
+   <td style="text-align:right;"> 1019734 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-39 </td>
+   <td style="text-align:right;"> 1106 </td>
+   <td style="text-align:right;"> 1085217 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-40 </td>
+   <td style="text-align:right;"> 1106 </td>
+   <td style="text-align:right;"> 943417 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-41 </td>
+   <td style="text-align:right;"> 1103 </td>
+   <td style="text-align:right;"> 688043 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-42 </td>
+   <td style="text-align:right;"> 1107 </td>
+   <td style="text-align:right;"> 508911 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-43 </td>
+   <td style="text-align:right;"> 1123 </td>
+   <td style="text-align:right;"> 845380 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-44 </td>
+   <td style="text-align:right;"> 1111 </td>
+   <td style="text-align:right;"> 1109528 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-45 </td>
+   <td style="text-align:right;"> 1115 </td>
+   <td style="text-align:right;"> 1237812 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-46 </td>
+   <td style="text-align:right;"> 1106 </td>
+   <td style="text-align:right;"> 756133 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-47 </td>
+   <td style="text-align:right;"> 1113 </td>
+   <td style="text-align:right;"> 1096805 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-48 </td>
+   <td style="text-align:right;"> 1099 </td>
+   <td style="text-align:right;"> 820066 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-49 </td>
+   <td style="text-align:right;"> 1096 </td>
+   <td style="text-align:right;"> 553715 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-50 </td>
+   <td style="text-align:right;"> 1092 </td>
+   <td style="text-align:right;"> 787819 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-51 </td>
+   <td style="text-align:right;"> 1096 </td>
+   <td style="text-align:right;"> 734825 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-52 </td>
+   <td style="text-align:right;"> 1093 </td>
+   <td style="text-align:right;"> 196751 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2015-53 </td>
+   <td style="text-align:right;"> 1090 </td>
+   <td style="text-align:right;"> 922020 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-01 </td>
+   <td style="text-align:right;"> 1087 </td>
+   <td style="text-align:right;"> 37166 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-02 </td>
+   <td style="text-align:right;"> 1087 </td>
+   <td style="text-align:right;"> 651738 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-03 </td>
+   <td style="text-align:right;"> 1078 </td>
+   <td style="text-align:right;"> 800541 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-04 </td>
+   <td style="text-align:right;"> 1053 </td>
+   <td style="text-align:right;"> 547300 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-05 </td>
+   <td style="text-align:right;"> 1041 </td>
+   <td style="text-align:right;"> 1266935 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-06 </td>
+   <td style="text-align:right;"> 1039 </td>
+   <td style="text-align:right;"> 654449 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-07 </td>
+   <td style="text-align:right;"> 1022 </td>
+   <td style="text-align:right;"> 943461 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-08 </td>
+   <td style="text-align:right;"> 1042 </td>
+   <td style="text-align:right;"> 936292 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-09 </td>
+   <td style="text-align:right;"> 1049 </td>
+   <td style="text-align:right;"> 1712264 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-10 </td>
+   <td style="text-align:right;"> 1063 </td>
+   <td style="text-align:right;"> 1735562 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-11 </td>
+   <td style="text-align:right;"> 1066 </td>
+   <td style="text-align:right;"> 3207721 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-12 </td>
+   <td style="text-align:right;"> 1092 </td>
+   <td style="text-align:right;"> 3794607 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-13 </td>
+   <td style="text-align:right;"> 1091 </td>
+   <td style="text-align:right;"> 4047196 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-14 </td>
+   <td style="text-align:right;"> 1105 </td>
+   <td style="text-align:right;"> 3482648 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-15 </td>
+   <td style="text-align:right;"> 1122 </td>
+   <td style="text-align:right;"> 3944928 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-16 </td>
+   <td style="text-align:right;"> 1141 </td>
+   <td style="text-align:right;"> 3671362 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-17 </td>
+   <td style="text-align:right;"> 1154 </td>
+   <td style="text-align:right;"> 3831141 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-18 </td>
+   <td style="text-align:right;"> 1154 </td>
+   <td style="text-align:right;"> 3929474 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-19 </td>
+   <td style="text-align:right;"> 1159 </td>
+   <td style="text-align:right;"> 3175573 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-20 </td>
+   <td style="text-align:right;"> 1168 </td>
+   <td style="text-align:right;"> 3318393 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-21 </td>
+   <td style="text-align:right;"> 1168 </td>
+   <td style="text-align:right;"> 2721664 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-22 </td>
+   <td style="text-align:right;"> 1168 </td>
+   <td style="text-align:right;"> 2454912 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-23 </td>
+   <td style="text-align:right;"> 1166 </td>
+   <td style="text-align:right;"> 1492611 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-24 </td>
+   <td style="text-align:right;"> 1172 </td>
+   <td style="text-align:right;"> 1595307 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-25 </td>
+   <td style="text-align:right;"> 1171 </td>
+   <td style="text-align:right;"> 1340768 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-26 </td>
+   <td style="text-align:right;"> 1166 </td>
+   <td style="text-align:right;"> 1237812 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-27 </td>
+   <td style="text-align:right;"> 1160 </td>
+   <td style="text-align:right;"> 1241507 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-28 </td>
+   <td style="text-align:right;"> 1160 </td>
+   <td style="text-align:right;"> 676702 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-29 </td>
+   <td style="text-align:right;"> 1162 </td>
+   <td style="text-align:right;"> 997467 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-30 </td>
+   <td style="text-align:right;"> 1153 </td>
+   <td style="text-align:right;"> 813261 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-31 </td>
+   <td style="text-align:right;"> 1155 </td>
+   <td style="text-align:right;"> 1560370 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-32 </td>
+   <td style="text-align:right;"> 1149 </td>
+   <td style="text-align:right;"> 933326 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-33 </td>
+   <td style="text-align:right;"> 1140 </td>
+   <td style="text-align:right;"> 782842 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-34 </td>
+   <td style="text-align:right;"> 1140 </td>
+   <td style="text-align:right;"> 1013357 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-35 </td>
+   <td style="text-align:right;"> 1144 </td>
+   <td style="text-align:right;"> 827290 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-36 </td>
+   <td style="text-align:right;"> 1149 </td>
+   <td style="text-align:right;"> 1191819 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-37 </td>
+   <td style="text-align:right;"> 1146 </td>
+   <td style="text-align:right;"> 908669 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-38 </td>
+   <td style="text-align:right;"> 1148 </td>
+   <td style="text-align:right;"> 1151976 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-39 </td>
+   <td style="text-align:right;"> 1145 </td>
+   <td style="text-align:right;"> 1014722 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-40 </td>
+   <td style="text-align:right;"> 1162 </td>
+   <td style="text-align:right;"> 841974 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-41 </td>
+   <td style="text-align:right;"> 1142 </td>
+   <td style="text-align:right;"> 547914 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-42 </td>
+   <td style="text-align:right;"> 1154 </td>
+   <td style="text-align:right;"> 891777 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-43 </td>
+   <td style="text-align:right;"> 1157 </td>
+   <td style="text-align:right;"> 806714 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-44 </td>
+   <td style="text-align:right;"> 1158 </td>
+   <td style="text-align:right;"> 1171225 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-45 </td>
+   <td style="text-align:right;"> 1151 </td>
+   <td style="text-align:right;"> 1077085 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-46 </td>
+   <td style="text-align:right;"> 1155 </td>
+   <td style="text-align:right;"> 745533 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-47 </td>
+   <td style="text-align:right;"> 1149 </td>
+   <td style="text-align:right;"> 812291 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-48 </td>
+   <td style="text-align:right;"> 1144 </td>
+   <td style="text-align:right;"> 954714 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-49 </td>
+   <td style="text-align:right;"> 1140 </td>
+   <td style="text-align:right;"> 647225 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-50 </td>
+   <td style="text-align:right;"> 1136 </td>
+   <td style="text-align:right;"> 492482 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-51 </td>
+   <td style="text-align:right;"> 1131 </td>
+   <td style="text-align:right;"> 857453 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-52 </td>
+   <td style="text-align:right;"> 1121 </td>
+   <td style="text-align:right;"> 651736 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2016-53 </td>
+   <td style="text-align:right;"> 1116 </td>
+   <td style="text-align:right;"> 1055611 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-01 </td>
+   <td style="text-align:right;"> 1104 </td>
+   <td style="text-align:right;"> 507358 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-02 </td>
+   <td style="text-align:right;"> 1090 </td>
+   <td style="text-align:right;"> 720732 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-03 </td>
+   <td style="text-align:right;"> 1077 </td>
+   <td style="text-align:right;"> 1036649 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-04 </td>
+   <td style="text-align:right;"> 1085 </td>
+   <td style="text-align:right;"> 1386120 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-05 </td>
+   <td style="text-align:right;"> 1083 </td>
+   <td style="text-align:right;"> 1279695 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-06 </td>
+   <td style="text-align:right;"> 1094 </td>
+   <td style="text-align:right;"> 1518976 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-07 </td>
+   <td style="text-align:right;"> 1084 </td>
+   <td style="text-align:right;"> 1504738 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-08 </td>
+   <td style="text-align:right;"> 1104 </td>
+   <td style="text-align:right;"> 2248669 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-09 </td>
+   <td style="text-align:right;"> 1103 </td>
+   <td style="text-align:right;"> 2727403 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-10 </td>
+   <td style="text-align:right;"> 1096 </td>
+   <td style="text-align:right;"> 3387558 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-11 </td>
+   <td style="text-align:right;"> 1116 </td>
+   <td style="text-align:right;"> 2110491 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-12 </td>
+   <td style="text-align:right;"> 1116 </td>
+   <td style="text-align:right;"> 2870845 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-13 </td>
+   <td style="text-align:right;"> 1102 </td>
+   <td style="text-align:right;"> 3972457 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-14 </td>
+   <td style="text-align:right;"> 1117 </td>
+   <td style="text-align:right;"> 3938165 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-15 </td>
+   <td style="text-align:right;"> 1145 </td>
+   <td style="text-align:right;"> 4077093 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-16 </td>
+   <td style="text-align:right;"> 1147 </td>
+   <td style="text-align:right;"> 3777769 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-17 </td>
+   <td style="text-align:right;"> 1164 </td>
+   <td style="text-align:right;"> 4243976 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-18 </td>
+   <td style="text-align:right;"> 1147 </td>
+   <td style="text-align:right;"> 3438270 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-19 </td>
+   <td style="text-align:right;"> 1164 </td>
+   <td style="text-align:right;"> 2436509 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-20 </td>
+   <td style="text-align:right;"> 1150 </td>
+   <td style="text-align:right;"> 2473438 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-21 </td>
+   <td style="text-align:right;"> 1144 </td>
+   <td style="text-align:right;"> 3048414 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-22 </td>
+   <td style="text-align:right;"> 1139 </td>
+   <td style="text-align:right;"> 1494081 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-23 </td>
+   <td style="text-align:right;"> 1128 </td>
+   <td style="text-align:right;"> 1642386 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-24 </td>
+   <td style="text-align:right;"> 1138 </td>
+   <td style="text-align:right;"> 1475733 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-25 </td>
+   <td style="text-align:right;"> 1127 </td>
+   <td style="text-align:right;"> 1772163 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-26 </td>
+   <td style="text-align:right;"> 1127 </td>
+   <td style="text-align:right;"> 1256671 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-27 </td>
+   <td style="text-align:right;"> 1118 </td>
+   <td style="text-align:right;"> 927627 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-28 </td>
+   <td style="text-align:right;"> 1123 </td>
+   <td style="text-align:right;"> 1020671 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-29 </td>
+   <td style="text-align:right;"> 1099 </td>
+   <td style="text-align:right;"> 974178 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-30 </td>
+   <td style="text-align:right;"> 1109 </td>
+   <td style="text-align:right;"> 1454635 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-31 </td>
+   <td style="text-align:right;"> 1107 </td>
+   <td style="text-align:right;"> 843826 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-32 </td>
+   <td style="text-align:right;"> 1101 </td>
+   <td style="text-align:right;"> 706822 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-33 </td>
+   <td style="text-align:right;"> 1114 </td>
+   <td style="text-align:right;"> 898326 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-34 </td>
+   <td style="text-align:right;"> 1106 </td>
+   <td style="text-align:right;"> 797766 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-35 </td>
+   <td style="text-align:right;"> 1107 </td>
+   <td style="text-align:right;"> 1414836 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-36 </td>
+   <td style="text-align:right;"> 1101 </td>
+   <td style="text-align:right;"> 785003 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-37 </td>
+   <td style="text-align:right;"> 1106 </td>
+   <td style="text-align:right;"> 587984 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-38 </td>
+   <td style="text-align:right;"> 1092 </td>
+   <td style="text-align:right;"> 1112209 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-39 </td>
+   <td style="text-align:right;"> 1101 </td>
+   <td style="text-align:right;"> 1269767 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-40 </td>
+   <td style="text-align:right;"> 1094 </td>
+   <td style="text-align:right;"> 602126 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-41 </td>
+   <td style="text-align:right;"> 1109 </td>
+   <td style="text-align:right;"> 705206 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-42 </td>
+   <td style="text-align:right;"> 1099 </td>
+   <td style="text-align:right;"> 1006947 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-43 </td>
+   <td style="text-align:right;"> 1098 </td>
+   <td style="text-align:right;"> 891128 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-44 </td>
+   <td style="text-align:right;"> 1085 </td>
+   <td style="text-align:right;"> 869906 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-45 </td>
+   <td style="text-align:right;"> 1081 </td>
+   <td style="text-align:right;"> 705248 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-46 </td>
+   <td style="text-align:right;"> 1095 </td>
+   <td style="text-align:right;"> 1094282 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-47 </td>
+   <td style="text-align:right;"> 1089 </td>
+   <td style="text-align:right;"> 1001326 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-48 </td>
+   <td style="text-align:right;"> 1093 </td>
+   <td style="text-align:right;"> 887124 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-49 </td>
+   <td style="text-align:right;"> 1084 </td>
+   <td style="text-align:right;"> 872929 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-50 </td>
+   <td style="text-align:right;"> 1077 </td>
+   <td style="text-align:right;"> 953712 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-51 </td>
+   <td style="text-align:right;"> 1056 </td>
+   <td style="text-align:right;"> 463291 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-52 </td>
+   <td style="text-align:right;"> 1053 </td>
+   <td style="text-align:right;"> 901877 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2017-53 </td>
+   <td style="text-align:right;"> 1038 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-01 </td>
+   <td style="text-align:right;"> 1060 </td>
+   <td style="text-align:right;"> 325576 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-02 </td>
+   <td style="text-align:right;"> 1065 </td>
+   <td style="text-align:right;"> 677086 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-03 </td>
+   <td style="text-align:right;"> 1054 </td>
+   <td style="text-align:right;"> 594192 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-04 </td>
+   <td style="text-align:right;"> 1058 </td>
+   <td style="text-align:right;"> 966243 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-05 </td>
+   <td style="text-align:right;"> 1048 </td>
+   <td style="text-align:right;"> 1153339 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-06 </td>
+   <td style="text-align:right;"> 1059 </td>
+   <td style="text-align:right;"> 1227725 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-07 </td>
+   <td style="text-align:right;"> 1068 </td>
+   <td style="text-align:right;"> 1538160 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-08 </td>
+   <td style="text-align:right;"> 1074 </td>
+   <td style="text-align:right;"> 2376844 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-09 </td>
+   <td style="text-align:right;"> 1082 </td>
+   <td style="text-align:right;"> 2746304 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-10 </td>
+   <td style="text-align:right;"> 1077 </td>
+   <td style="text-align:right;"> 3073629 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-11 </td>
+   <td style="text-align:right;"> 1090 </td>
+   <td style="text-align:right;"> 2633524 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-12 </td>
+   <td style="text-align:right;"> 1088 </td>
+   <td style="text-align:right;"> 3246326 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-13 </td>
+   <td style="text-align:right;"> 1081 </td>
+   <td style="text-align:right;"> 2972258 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-14 </td>
+   <td style="text-align:right;"> 1084 </td>
+   <td style="text-align:right;"> 3434567 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-15 </td>
+   <td style="text-align:right;"> 1091 </td>
+   <td style="text-align:right;"> 3879499 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-16 </td>
+   <td style="text-align:right;"> 1082 </td>
+   <td style="text-align:right;"> 3324898 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-17 </td>
+   <td style="text-align:right;"> 1106 </td>
+   <td style="text-align:right;"> 3812500 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-18 </td>
+   <td style="text-align:right;"> 1098 </td>
+   <td style="text-align:right;"> 3615039 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-19 </td>
+   <td style="text-align:right;"> 1113 </td>
+   <td style="text-align:right;"> 3608791 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-20 </td>
+   <td style="text-align:right;"> 1126 </td>
+   <td style="text-align:right;"> 3433668 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-21 </td>
+   <td style="text-align:right;"> 1118 </td>
+   <td style="text-align:right;"> 2769745 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-22 </td>
+   <td style="text-align:right;"> 1105 </td>
+   <td style="text-align:right;"> 2148625 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-23 </td>
+   <td style="text-align:right;"> 1102 </td>
+   <td style="text-align:right;"> 1584570 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-24 </td>
+   <td style="text-align:right;"> 1111 </td>
+   <td style="text-align:right;"> 1679610 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-25 </td>
+   <td style="text-align:right;"> 1106 </td>
+   <td style="text-align:right;"> 1265381 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-26 </td>
+   <td style="text-align:right;"> 1101 </td>
+   <td style="text-align:right;"> 1137080 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-27 </td>
+   <td style="text-align:right;"> 1101 </td>
+   <td style="text-align:right;"> 901467 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-28 </td>
+   <td style="text-align:right;"> 1111 </td>
+   <td style="text-align:right;"> 925816 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-29 </td>
+   <td style="text-align:right;"> 1099 </td>
+   <td style="text-align:right;"> 1023262 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-30 </td>
+   <td style="text-align:right;"> 1095 </td>
+   <td style="text-align:right;"> 1440600 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-31 </td>
+   <td style="text-align:right;"> 1088 </td>
+   <td style="text-align:right;"> 1209750 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-32 </td>
+   <td style="text-align:right;"> 1089 </td>
+   <td style="text-align:right;"> 1021708 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-33 </td>
+   <td style="text-align:right;"> 1105 </td>
+   <td style="text-align:right;"> 766932 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-34 </td>
+   <td style="text-align:right;"> 1087 </td>
+   <td style="text-align:right;"> 1035260 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-35 </td>
+   <td style="text-align:right;"> 1085 </td>
+   <td style="text-align:right;"> 1446093 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-36 </td>
+   <td style="text-align:right;"> 1078 </td>
+   <td style="text-align:right;"> 1162404 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-37 </td>
+   <td style="text-align:right;"> 1078 </td>
+   <td style="text-align:right;"> 1282269 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-38 </td>
+   <td style="text-align:right;"> 1079 </td>
+   <td style="text-align:right;"> 1345707 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-39 </td>
+   <td style="text-align:right;"> 1082 </td>
+   <td style="text-align:right;"> 1284394 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-40 </td>
+   <td style="text-align:right;"> 1080 </td>
+   <td style="text-align:right;"> 920550 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-41 </td>
+   <td style="text-align:right;"> 1076 </td>
+   <td style="text-align:right;"> 857666 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-42 </td>
+   <td style="text-align:right;"> 1076 </td>
+   <td style="text-align:right;"> 922532 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-43 </td>
+   <td style="text-align:right;"> 1074 </td>
+   <td style="text-align:right;"> 1017598 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-44 </td>
+   <td style="text-align:right;"> 1069 </td>
+   <td style="text-align:right;"> 1056534 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-45 </td>
+   <td style="text-align:right;"> 1069 </td>
+   <td style="text-align:right;"> 915206 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-46 </td>
+   <td style="text-align:right;"> 1063 </td>
+   <td style="text-align:right;"> 1117478 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-47 </td>
+   <td style="text-align:right;"> 1058 </td>
+   <td style="text-align:right;"> 1032044 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-48 </td>
+   <td style="text-align:right;"> 1060 </td>
+   <td style="text-align:right;"> 879955 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-49 </td>
+   <td style="text-align:right;"> 1052 </td>
+   <td style="text-align:right;"> 813069 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-50 </td>
+   <td style="text-align:right;"> 1050 </td>
+   <td style="text-align:right;"> 715880 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-51 </td>
+   <td style="text-align:right;"> 1047 </td>
+   <td style="text-align:right;"> 493746 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-52 </td>
+   <td style="text-align:right;"> 1057 </td>
+   <td style="text-align:right;"> 764003 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2018-53 </td>
+   <td style="text-align:right;"> 1044 </td>
+   <td style="text-align:right;"> 57252 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-01 </td>
+   <td style="text-align:right;"> 1048 </td>
+   <td style="text-align:right;"> 747982 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-02 </td>
+   <td style="text-align:right;"> 1048 </td>
+   <td style="text-align:right;"> 794494 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-03 </td>
+   <td style="text-align:right;"> 1050 </td>
+   <td style="text-align:right;"> 975622 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-04 </td>
+   <td style="text-align:right;"> 1052 </td>
+   <td style="text-align:right;"> 1129077 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-05 </td>
+   <td style="text-align:right;"> 1053 </td>
+   <td style="text-align:right;"> 1220011 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-06 </td>
+   <td style="text-align:right;"> 1045 </td>
+   <td style="text-align:right;"> 1253905 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-07 </td>
+   <td style="text-align:right;"> 1044 </td>
+   <td style="text-align:right;"> 1541032 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-08 </td>
+   <td style="text-align:right;"> 1049 </td>
+   <td style="text-align:right;"> 1803261 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-09 </td>
+   <td style="text-align:right;"> 1051 </td>
+   <td style="text-align:right;"> 2636057 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-10 </td>
+   <td style="text-align:right;"> 1044 </td>
+   <td style="text-align:right;"> 2370363 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-11 </td>
+   <td style="text-align:right;"> 1047 </td>
+   <td style="text-align:right;"> 2961700 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-12 </td>
+   <td style="text-align:right;"> 1049 </td>
+   <td style="text-align:right;"> 3730900 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-13 </td>
+   <td style="text-align:right;"> 1051 </td>
+   <td style="text-align:right;"> 3904287 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-14 </td>
+   <td style="text-align:right;"> 1057 </td>
+   <td style="text-align:right;"> 4309552 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-15 </td>
+   <td style="text-align:right;"> 1053 </td>
+   <td style="text-align:right;"> 4676142 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-16 </td>
+   <td style="text-align:right;"> 1071 </td>
+   <td style="text-align:right;"> 4897571 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-17 </td>
+   <td style="text-align:right;"> 1086 </td>
+   <td style="text-align:right;"> 5194951 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-18 </td>
+   <td style="text-align:right;"> 1097 </td>
+   <td style="text-align:right;"> 4291125 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-19 </td>
+   <td style="text-align:right;"> 1100 </td>
+   <td style="text-align:right;"> 4127173 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-20 </td>
+   <td style="text-align:right;"> 1127 </td>
+   <td style="text-align:right;"> 4065942 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-21 </td>
+   <td style="text-align:right;"> 1125 </td>
+   <td style="text-align:right;"> 3623816 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-22 </td>
+   <td style="text-align:right;"> 1127 </td>
+   <td style="text-align:right;"> 1523581 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-23 </td>
+   <td style="text-align:right;"> 1122 </td>
+   <td style="text-align:right;"> 1822741 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-24 </td>
+   <td style="text-align:right;"> 1241 </td>
+   <td style="text-align:right;"> 1480971 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-25 </td>
+   <td style="text-align:right;"> 1245 </td>
+   <td style="text-align:right;"> 1700950 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-26 </td>
+   <td style="text-align:right;"> 1235 </td>
+   <td style="text-align:right;"> 1492285 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-27 </td>
+   <td style="text-align:right;"> 1235 </td>
+   <td style="text-align:right;"> 1098727 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-28 </td>
+   <td style="text-align:right;"> 1233 </td>
+   <td style="text-align:right;"> 941500 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-29 </td>
+   <td style="text-align:right;"> 1230 </td>
+   <td style="text-align:right;"> 893052 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-30 </td>
+   <td style="text-align:right;"> 1232 </td>
+   <td style="text-align:right;"> 1025655 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-31 </td>
+   <td style="text-align:right;"> 1239 </td>
+   <td style="text-align:right;"> 1186058 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-32 </td>
+   <td style="text-align:right;"> 1228 </td>
+   <td style="text-align:right;"> 1189090 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-33 </td>
+   <td style="text-align:right;"> 1230 </td>
+   <td style="text-align:right;"> 1106885 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-34 </td>
+   <td style="text-align:right;"> 1230 </td>
+   <td style="text-align:right;"> 1274547 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-35 </td>
+   <td style="text-align:right;"> 1229 </td>
+   <td style="text-align:right;"> 1322772 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-36 </td>
+   <td style="text-align:right;"> 1229 </td>
+   <td style="text-align:right;"> 671083 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-37 </td>
+   <td style="text-align:right;"> 1225 </td>
+   <td style="text-align:right;"> 1216611 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-38 </td>
+   <td style="text-align:right;"> 1228 </td>
+   <td style="text-align:right;"> 1091560 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-39 </td>
+   <td style="text-align:right;"> 1226 </td>
+   <td style="text-align:right;"> 1208336 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-40 </td>
+   <td style="text-align:right;"> 1228 </td>
+   <td style="text-align:right;"> 935742 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-41 </td>
+   <td style="text-align:right;"> 1224 </td>
+   <td style="text-align:right;"> 802683 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-42 </td>
+   <td style="text-align:right;"> 1230 </td>
+   <td style="text-align:right;"> 1011143 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-43 </td>
+   <td style="text-align:right;"> 1234 </td>
+   <td style="text-align:right;"> 1060517 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-44 </td>
+   <td style="text-align:right;"> 554 </td>
+   <td style="text-align:right;"> 273411 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-45 </td>
+   <td style="text-align:right;"> 497 </td>
+   <td style="text-align:right;"> 167728 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-46 </td>
+   <td style="text-align:right;"> 476 </td>
+   <td style="text-align:right;"> 136748 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-47 </td>
+   <td style="text-align:right;"> 410 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-48 </td>
+   <td style="text-align:right;"> 442 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-49 </td>
+   <td style="text-align:right;"> 427 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-50 </td>
+   <td style="text-align:right;"> 368 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-51 </td>
+   <td style="text-align:right;"> 435 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-52 </td>
+   <td style="text-align:right;"> 457 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2019-53 </td>
+   <td style="text-align:right;"> 282 </td>
+   <td style="text-align:right;"> 34 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-01 </td>
+   <td style="text-align:right;"> 355 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-02 </td>
+   <td style="text-align:right;"> 525 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-03 </td>
+   <td style="text-align:right;"> 537 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-04 </td>
+   <td style="text-align:right;"> 528 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-05 </td>
+   <td style="text-align:right;"> 563 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-06 </td>
+   <td style="text-align:right;"> 587 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-07 </td>
+   <td style="text-align:right;"> 620 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-08 </td>
+   <td style="text-align:right;"> 607 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-09 </td>
+   <td style="text-align:right;"> 594 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-10 </td>
+   <td style="text-align:right;"> 664 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-11 </td>
+   <td style="text-align:right;"> 679 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-12 </td>
+   <td style="text-align:right;"> 698 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-13 </td>
+   <td style="text-align:right;"> 724 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-14 </td>
+   <td style="text-align:right;"> 707 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-15 </td>
+   <td style="text-align:right;"> 709 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-16 </td>
+   <td style="text-align:right;"> 731 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-17 </td>
+   <td style="text-align:right;"> 710 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-18 </td>
+   <td style="text-align:right;"> 735 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-19 </td>
+   <td style="text-align:right;"> 714 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-20 </td>
+   <td style="text-align:right;"> 686 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-21 </td>
+   <td style="text-align:right;"> 700 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-22 </td>
+   <td style="text-align:right;"> 555 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-23 </td>
+   <td style="text-align:right;"> 612 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-24 </td>
+   <td style="text-align:right;"> 632 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-25 </td>
+   <td style="text-align:right;"> 647 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-26 </td>
+   <td style="text-align:right;"> 622 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-27 </td>
+   <td style="text-align:right;"> 580 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-28 </td>
+   <td style="text-align:right;"> 547 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-29 </td>
+   <td style="text-align:right;"> 559 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-30 </td>
+   <td style="text-align:right;"> 531 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-31 </td>
+   <td style="text-align:right;"> 577 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-32 </td>
+   <td style="text-align:right;"> 583 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-33 </td>
+   <td style="text-align:right;"> 561 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-34 </td>
+   <td style="text-align:right;"> 618 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-35 </td>
+   <td style="text-align:right;"> 620 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-36 </td>
+   <td style="text-align:right;"> 442 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-37 </td>
+   <td style="text-align:right;"> 525 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-38 </td>
+   <td style="text-align:right;"> 528 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-39 </td>
+   <td style="text-align:right;"> 517 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-40 </td>
+   <td style="text-align:right;"> 504 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-41 </td>
+   <td style="text-align:right;"> 462 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-42 </td>
+   <td style="text-align:right;"> 483 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-43 </td>
+   <td style="text-align:right;"> 487 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-44 </td>
+   <td style="text-align:right;"> 377 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2020-45 </td>
+   <td style="text-align:right;"> 42 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+</tbody>
+</table></div>
 
 ```r
 shipped_agg <- shipped_agg%>%
@@ -272,7 +1826,7 @@ ggplot(shipped_agg, aes(x = Date, y=CY_Shipped )) +
     breaks=levels(shipped_agg$Date)[my_breaks])
 ```
 
-![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-15-1.png)<!-- -->
+![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
 
 
 #### By Year
@@ -283,7 +1837,7 @@ ggplot(shipped_agg, aes(x = Date.Fiscal.Year., y=CY_Shipped )) +
   theme(axis.text.x = element_text(angle=65, vjust=0.6))
 ```
 
-![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-16-1.png)<!-- -->
+![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
 
 
 #### By Week
@@ -294,7 +1848,7 @@ ggplot(shipped_agg, aes(x = Date.Fiscal.Week. , y= CY_Shipped)) +
   theme(axis.text.x = element_text(angle=65, vjust=0.6))
 ```
 
-![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-17-1.png)<!-- -->
+![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
 
 
 #### By Customer
@@ -305,7 +1859,7 @@ ggplot(shipped_agg, aes(x = Customer.Customer. , y= CY_Shipped)) +
   theme(axis.text.x = element_text(angle=65, vjust=0.6))
 ```
 
-![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-18-1.png)<!-- -->
+![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
 
 
 #### By Store Sub Region
@@ -316,25 +1870,141 @@ ggplot(shipped_agg, aes(x = Store.Sub.Region. , y= CY_Shipped)) +
   theme(axis.text.x = element_text(angle=65, vjust=0.6))
 ```
 
-![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-19-1.png)<!-- -->
+![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-20-1.png)<!-- -->
 
 
 #### It looks like we need to get rid of blank and n/a levels in Store Region
 
 ```r
-shipped_agg%>%
+kable(shipped_agg%>%
   group_by(Store.Sub.Region.)%>%
   summarize(count=n(),
             total = sum(CY_Shipped),
-            ave=mean(CY_Shipped))%>%
-  rmarkdown::paged_table()
+            ave=mean(CY_Shipped)))%>%
+  kable_styling() %>%
+  scroll_box(width = "500px", height = "200px")
 ```
 
-<div data-pagedtable="false">
-  <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["Store.Sub.Region."],"name":[1],"type":["fctr"],"align":["left"]},{"label":["count"],"name":[2],"type":["int"],"align":["right"]},{"label":["total"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["ave"],"name":[4],"type":["dbl"],"align":["right"]}],"data":[{"1":"","2":"157","3":"0","4":"0.000000"},{"1":"#N/A","2":"174","3":"0","4":"0.000000"},{"1":"10","2":"24832","3":"32071188","4":"1291.526579"},{"1":"10.1","2":"22568","3":"12992922","4":"575.723236"},{"1":"11","2":"7575","3":"136303","4":"17.993795"},{"1":"12","2":"6878","3":"540728","4":"78.617040"},{"1":"13","2":"7092","3":"797166","4":"112.403553"},{"1":"2","2":"707","3":"1187","4":"1.678925"},{"1":"3","2":"10708","3":"202581","4":"18.918659"},{"1":"4","2":"17334","3":"3433286","4":"198.066574"},{"1":"5","2":"19491","3":"17632493","4":"904.647940"},{"1":"6","2":"22677","3":"53715734","4":"2368.731931"},{"1":"7","2":"27946","3":"93250596","4":"3336.813712"},{"1":"8","2":"28444","3":"94140291","4":"3309.671319"},{"1":"8.1","2":"24132","3":"21391450","4":"886.435024"},{"1":"9","2":"26022","3":"53115353","4":"2041.171048"},{"1":"9.1","2":"23708","3":"28201860","4":"1189.550363"},{"1":"N/A","2":"12238","3":"795341","4":"64.989459"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:200px; overflow-x: scroll; width:500px; "><table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Store.Sub.Region. </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> count </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> total </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> ave </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:right;"> 157 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0.000000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> #N/A </td>
+   <td style="text-align:right;"> 174 </td>
+   <td style="text-align:right;"> 0 </td>
+   <td style="text-align:right;"> 0.000000 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 10 </td>
+   <td style="text-align:right;"> 24832 </td>
+   <td style="text-align:right;"> 32071188 </td>
+   <td style="text-align:right;"> 1291.526579 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 10.1 </td>
+   <td style="text-align:right;"> 22568 </td>
+   <td style="text-align:right;"> 12992922 </td>
+   <td style="text-align:right;"> 575.723236 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 11 </td>
+   <td style="text-align:right;"> 7575 </td>
+   <td style="text-align:right;"> 136303 </td>
+   <td style="text-align:right;"> 17.993795 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 12 </td>
+   <td style="text-align:right;"> 6878 </td>
+   <td style="text-align:right;"> 540728 </td>
+   <td style="text-align:right;"> 78.617040 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 13 </td>
+   <td style="text-align:right;"> 7092 </td>
+   <td style="text-align:right;"> 797166 </td>
+   <td style="text-align:right;"> 112.403553 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 2 </td>
+   <td style="text-align:right;"> 707 </td>
+   <td style="text-align:right;"> 1187 </td>
+   <td style="text-align:right;"> 1.678925 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 3 </td>
+   <td style="text-align:right;"> 10708 </td>
+   <td style="text-align:right;"> 202581 </td>
+   <td style="text-align:right;"> 18.918659 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 4 </td>
+   <td style="text-align:right;"> 17334 </td>
+   <td style="text-align:right;"> 3433286 </td>
+   <td style="text-align:right;"> 198.066574 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 5 </td>
+   <td style="text-align:right;"> 19491 </td>
+   <td style="text-align:right;"> 17632493 </td>
+   <td style="text-align:right;"> 904.647940 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 6 </td>
+   <td style="text-align:right;"> 22677 </td>
+   <td style="text-align:right;"> 53715734 </td>
+   <td style="text-align:right;"> 2368.731931 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 7 </td>
+   <td style="text-align:right;"> 27946 </td>
+   <td style="text-align:right;"> 93250596 </td>
+   <td style="text-align:right;"> 3336.813712 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 8 </td>
+   <td style="text-align:right;"> 28444 </td>
+   <td style="text-align:right;"> 94140291 </td>
+   <td style="text-align:right;"> 3309.671319 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 8.1 </td>
+   <td style="text-align:right;"> 24132 </td>
+   <td style="text-align:right;"> 21391450 </td>
+   <td style="text-align:right;"> 886.435024 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 9 </td>
+   <td style="text-align:right;"> 26022 </td>
+   <td style="text-align:right;"> 53115353 </td>
+   <td style="text-align:right;"> 2041.171048 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> 9.1 </td>
+   <td style="text-align:right;"> 23708 </td>
+   <td style="text-align:right;"> 28201860 </td>
+   <td style="text-align:right;"> 1189.550363 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> N/A </td>
+   <td style="text-align:right;"> 12238 </td>
+   <td style="text-align:right;"> 795341 </td>
+   <td style="text-align:right;"> 64.989459 </td>
+  </tr>
+</tbody>
+</table></div>
 
 ```r
 shipped_agg <- shipped_agg%>%
@@ -351,24 +2021,256 @@ ggplot(shipped_agg, aes(x = Product.Category. , y= CY_Shipped)) +
   theme(axis.text.x = element_text(angle=65, vjust=0.6))
 ```
 
-![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-21-1.png)<!-- -->
+![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-22-1.png)<!-- -->
 
 
 #### It looks like we need to get rid of a blank level in Product Category
 
 ```r
-shipped_agg%>%
+kable(shipped_agg%>%
   group_by(Product.Category.)%>%
   summarize(count=n(),
-            total = sum(CY_Shipped))%>%
-  rmarkdown::paged_table()
+            total = sum(CY_Shipped)))%>%
+  kable_styling() %>%
+  scroll_box(width = "500px", height = "200px")
 ```
 
-<div data-pagedtable="false">
-  <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["Product.Category."],"name":[1],"type":["fctr"],"align":["left"]},{"label":["count"],"name":[2],"type":["int"],"align":["right"]},{"label":["total"],"name":[3],"type":["dbl"],"align":["right"]}],"data":[{"1":"","2":"130","3":"0"},{"1":"ANS - Annuals","2":"5255","3":"112779933"},{"1":"ANS - Bulb","2":"1236","3":"160781"},{"1":"ANS - Combos","2":"3740","3":"1770680"},{"1":"ANS - Edible","2":"1933","3":"42887"},{"1":"ANS - Ferns","2":"2283","3":"511271"},{"1":"ANS - Mums","2":"4079","3":"8451513"},{"1":"ANS - Pansy","2":"2914","3":"7729403"},{"1":"Blooming Tropicals","2":"20","3":"918"},{"1":"BTS - Combos","2":"6999","3":"686589"},{"1":"BTS - Hibiscus","2":"9239","3":"11669884"},{"1":"BTS - Mandevilla","2":"9284","3":"13060827"},{"1":"BTS - Patio Tropicals","2":"9039","3":"3507474"},{"1":"BTS - Shrubs","2":"8668","3":"4502993"},{"1":"C&S - Cacti","2":"9337","3":"3014441"},{"1":"C&S - Dish Gardens","2":"8032","3":"978072"},{"1":"C&S - Landscape","2":"8582","3":"2410353"},{"1":"C&S - Succulents","2":"8446","3":"8130707"},{"1":"FLG - Baskets","2":"9592","3":"7747728"},{"1":"FLG - Combos","2":"7848","3":"602276"},{"1":"FLG - Indoor Palms","2":"9671","3":"9658999"},{"1":"FLG - Landscape Palms","2":"6601","3":"220809"},{"1":"FLG - Large Indoor","2":"9704","3":"13004025"},{"1":"FLG - Shrubs","2":"9506","3":"9114587"},{"1":"FLG - Small Indoor","2":"9772","3":"51483707"},{"1":"FNS - Boston","2":"8684","3":"6270254"},{"1":"HLY - Pines","2":"8089","3":"3220867"},{"1":"HLY - Poinsettias","2":"3479","3":"6173471"},{"1":"HLY - Zygo","2":"5080","3":"472828"},{"1":"N/A","2":"9382","3":"36745837"},{"1":"PNS - Combos","2":"2700","3":"191704"},{"1":"PNS - Ferns","2":"1975","3":"691902"},{"1":"PNS - Grass","2":"3276","3":"3640043"},{"1":"PNS - Ground Cover","2":"2799","3":"6649366"},{"1":"PNS - Hosta","2":"2244","3":"4909560"},{"1":"PNS - Lily","2":"5154","3":"7984826"},{"1":"PNS - Perennials","2":"5218","3":"21069047"},{"1":"PNS - Vining","2":"1643","3":"533286"},{"1":"SPY - Bonsai","2":"9354","3":"1624706"},{"1":"SPY - Bromeliad & Anthuriums","2":"9403","3":"4665225"},{"1":"SPY - Lucky Bamboo","2":"9420","3":"5440838"},{"1":"SPY - Orchids","2":"7440","3":"3881219"},{"1":"SPY - Specialty","2":"9173","3":"1060674"},{"1":"SPY - Specialty Gardens","2":"8338","3":"583502"},{"1":"Unknown","2":"6884","3":"25367280"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
+<div style="border: 1px solid #ddd; padding: 0px; overflow-y: scroll; height:200px; overflow-x: scroll; width:500px; "><table class="table" style="margin-left: auto; margin-right: auto;">
+ <thead>
+  <tr>
+   <th style="text-align:left;position: sticky; top:0; background-color: #FFFFFF;"> Product.Category. </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> count </th>
+   <th style="text-align:right;position: sticky; top:0; background-color: #FFFFFF;"> total </th>
+  </tr>
+ </thead>
+<tbody>
+  <tr>
+   <td style="text-align:left;">  </td>
+   <td style="text-align:right;"> 130 </td>
+   <td style="text-align:right;"> 0 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ANS - Annuals </td>
+   <td style="text-align:right;"> 5255 </td>
+   <td style="text-align:right;"> 112779933 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ANS - Bulb </td>
+   <td style="text-align:right;"> 1236 </td>
+   <td style="text-align:right;"> 160781 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ANS - Combos </td>
+   <td style="text-align:right;"> 3740 </td>
+   <td style="text-align:right;"> 1770680 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ANS - Edible </td>
+   <td style="text-align:right;"> 1933 </td>
+   <td style="text-align:right;"> 42887 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ANS - Ferns </td>
+   <td style="text-align:right;"> 2283 </td>
+   <td style="text-align:right;"> 511271 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ANS - Mums </td>
+   <td style="text-align:right;"> 4079 </td>
+   <td style="text-align:right;"> 8451513 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> ANS - Pansy </td>
+   <td style="text-align:right;"> 2914 </td>
+   <td style="text-align:right;"> 7729403 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Blooming Tropicals </td>
+   <td style="text-align:right;"> 20 </td>
+   <td style="text-align:right;"> 918 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> BTS - Combos </td>
+   <td style="text-align:right;"> 6999 </td>
+   <td style="text-align:right;"> 686589 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> BTS - Hibiscus </td>
+   <td style="text-align:right;"> 9239 </td>
+   <td style="text-align:right;"> 11669884 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> BTS - Mandevilla </td>
+   <td style="text-align:right;"> 9284 </td>
+   <td style="text-align:right;"> 13060827 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> BTS - Patio Tropicals </td>
+   <td style="text-align:right;"> 9039 </td>
+   <td style="text-align:right;"> 3507474 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> BTS - Shrubs </td>
+   <td style="text-align:right;"> 8668 </td>
+   <td style="text-align:right;"> 4502993 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C&amp;S - Cacti </td>
+   <td style="text-align:right;"> 9337 </td>
+   <td style="text-align:right;"> 3014441 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C&amp;S - Dish Gardens </td>
+   <td style="text-align:right;"> 8032 </td>
+   <td style="text-align:right;"> 978072 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C&amp;S - Landscape </td>
+   <td style="text-align:right;"> 8582 </td>
+   <td style="text-align:right;"> 2410353 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> C&amp;S - Succulents </td>
+   <td style="text-align:right;"> 8446 </td>
+   <td style="text-align:right;"> 8130707 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> FLG - Baskets </td>
+   <td style="text-align:right;"> 9592 </td>
+   <td style="text-align:right;"> 7747728 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> FLG - Combos </td>
+   <td style="text-align:right;"> 7848 </td>
+   <td style="text-align:right;"> 602276 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> FLG - Indoor Palms </td>
+   <td style="text-align:right;"> 9671 </td>
+   <td style="text-align:right;"> 9658999 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> FLG - Landscape Palms </td>
+   <td style="text-align:right;"> 6601 </td>
+   <td style="text-align:right;"> 220809 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> FLG - Large Indoor </td>
+   <td style="text-align:right;"> 9704 </td>
+   <td style="text-align:right;"> 13004025 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> FLG - Shrubs </td>
+   <td style="text-align:right;"> 9506 </td>
+   <td style="text-align:right;"> 9114587 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> FLG - Small Indoor </td>
+   <td style="text-align:right;"> 9772 </td>
+   <td style="text-align:right;"> 51483707 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> FNS - Boston </td>
+   <td style="text-align:right;"> 8684 </td>
+   <td style="text-align:right;"> 6270254 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HLY - Pines </td>
+   <td style="text-align:right;"> 8089 </td>
+   <td style="text-align:right;"> 3220867 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HLY - Poinsettias </td>
+   <td style="text-align:right;"> 3479 </td>
+   <td style="text-align:right;"> 6173471 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> HLY - Zygo </td>
+   <td style="text-align:right;"> 5080 </td>
+   <td style="text-align:right;"> 472828 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> N/A </td>
+   <td style="text-align:right;"> 9382 </td>
+   <td style="text-align:right;"> 36745837 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PNS - Combos </td>
+   <td style="text-align:right;"> 2700 </td>
+   <td style="text-align:right;"> 191704 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PNS - Ferns </td>
+   <td style="text-align:right;"> 1975 </td>
+   <td style="text-align:right;"> 691902 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PNS - Grass </td>
+   <td style="text-align:right;"> 3276 </td>
+   <td style="text-align:right;"> 3640043 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PNS - Ground Cover </td>
+   <td style="text-align:right;"> 2799 </td>
+   <td style="text-align:right;"> 6649366 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PNS - Hosta </td>
+   <td style="text-align:right;"> 2244 </td>
+   <td style="text-align:right;"> 4909560 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PNS - Lily </td>
+   <td style="text-align:right;"> 5154 </td>
+   <td style="text-align:right;"> 7984826 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PNS - Perennials </td>
+   <td style="text-align:right;"> 5218 </td>
+   <td style="text-align:right;"> 21069047 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> PNS - Vining </td>
+   <td style="text-align:right;"> 1643 </td>
+   <td style="text-align:right;"> 533286 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SPY - Bonsai </td>
+   <td style="text-align:right;"> 9354 </td>
+   <td style="text-align:right;"> 1624706 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SPY - Bromeliad &amp; Anthuriums </td>
+   <td style="text-align:right;"> 9403 </td>
+   <td style="text-align:right;"> 4665225 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SPY - Lucky Bamboo </td>
+   <td style="text-align:right;"> 9420 </td>
+   <td style="text-align:right;"> 5440838 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SPY - Orchids </td>
+   <td style="text-align:right;"> 7440 </td>
+   <td style="text-align:right;"> 3881219 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SPY - Specialty </td>
+   <td style="text-align:right;"> 9173 </td>
+   <td style="text-align:right;"> 1060674 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> SPY - Specialty Gardens </td>
+   <td style="text-align:right;"> 8338 </td>
+   <td style="text-align:right;"> 583502 </td>
+  </tr>
+  <tr>
+   <td style="text-align:left;"> Unknown </td>
+   <td style="text-align:right;"> 6884 </td>
+   <td style="text-align:right;"> 25367280 </td>
+  </tr>
+</tbody>
+</table></div>
 
 ```r
 shipped_agg <- shipped_agg%>%
@@ -476,6 +2378,25 @@ colSums(sapply(lagged_df,is.na))
 ##          COGS_Lag3          COGS_Lag4 
 ##                  0                  0
 ```
+### Correlations
+#### I want to look to see how correlated the numeric variables are currently. This will give me a feel for what types of models that I can use on this data set.
+
+```r
+corr <- round(cor(lagged_df[6:26]), 1)
+
+# Plot
+library('ggcorrplot')
+ggcorrplot(corr, hc.order = TRUE, 
+           type = "lower", 
+           lab = TRUE, 
+           lab_size = 3, 
+           method="circle", 
+           colors = c("tomato2", "white", "springgreen3"), 
+           title="Correlogram of Numeric Data", 
+           ggtheme=theme_bw)
+```
+
+![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-29-1.png)<!-- -->
 
 ### Model creation
 #### First, I need to scale all of the data so that I can determine the most important features later. Then I dummy all factor variables and create a test and training set.
@@ -507,7 +2428,7 @@ testSet <- model_df_onehot[model_df_onehot$Date.Fiscal.Year..2019=='1',]
 ```
 
 
-#### Drop Year variable so that we don't get any errors
+#### Drop the Year variables so that we don't get any errors when running the models
 
 ```r
 trainSet <- trainSet%>%
@@ -551,7 +2472,8 @@ linear<-train(x= trainSet[,candidate.features],
 ```
 
 
-#### Model Results
+### Model Results
+#### It looks like all the models did fairly well with the training data set with the Linear model outperforming in both RMSE and R-squared.
 
 ```r
 model_list <- list(lasso=lasso,ridge=ridge,linear=linear)
@@ -589,26 +2511,26 @@ summary(resamples(model_list))
 ## linear 0.8003835 0.8091260 0.8156204 0.8174309 0.8301179 0.8319066    0
 ```
 
-
-#### Look at variable importance
+### Variable Importance
+#### Both the linear and ridge models had similar variables they deemed important. However, the lasso regression model tossed out all but 4 variables.This is due to multicollinearity in the data as seen in the correlation plot above. I will testing the data on more algorithms in a separte markdown. 
 
 ```r
 plot(varImp(ridge),top=20)
 ```
 
-![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-35-1.png)<!-- -->
+![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-37-1.png)<!-- -->
 
 ```r
 plot(varImp(lasso),top=20)
 ```
 
-![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-35-2.png)<!-- -->
+![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-37-2.png)<!-- -->
 
 ```r
 plot(varImp(linear),top=20)
 ```
 
-![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-35-3.png)<!-- -->
+![](Demand-Forecasting---Feature-Creation_files/figure-html/unnamed-chunk-37-3.png)<!-- -->
 
 
 
