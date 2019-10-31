@@ -1,7 +1,7 @@
 ---
 classes: wide
 title: " "
-excerpt: Demand Forecasting - Feature Creation
+excerpt: Data Cleaning & Feature Creation
 header:
   overlay_image: /assets/images/Header.jpg  
 ---
